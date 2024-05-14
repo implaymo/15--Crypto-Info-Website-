@@ -4,32 +4,39 @@ import json
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
 
-url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
+class ApiProvider():
+    def __init__(self) -> None:
+        load_dotenv()
+        self.url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 
-parameters = {
-    'start': '1',
-    'limit': '5000',
-    'convert': 'EUR'
-}
-headers = {
-    'Accepts': 'applications/json',
-    'X-CMC_PRO_API_KEY': os.getenv('api_key'),
-}
+        self.parameters = {
+            'start': '1',
+            'limit': '5000',
+            'convert': 'EUR'
+        }
+        
+        self.headers = {
+            'Accepts': 'applications/json',
+            'X-CMC_PRO_API_KEY': os.getenv('api_key'),
+        }
+        
+        self.most_value_cryptos = []
+        self.top_10_cryptos = []
 
+        
+    def get_all_cryptos(self):  
+        session = Session()
+        session.headers.update(self.headers)
+        try:
+            response = session.get(self.url, params=self.parameters)
+            data = json.loads(response.text)  
+        except (ConnectionError, Timeout, TooManyRedirects) as e:
+            print(e)
+        for crypto in data["data"]:
+            self.most_value_cryptos.append((crypto["name"], crypto["quote"]["EUR"]["price"], crypto["quote"]["EUR"]["market_cap"]))
 
-session = Session()
-session.headers.update(headers)
-
-try:
-  response = session.get(url, params=parameters)
-  data = json.loads(response.text)
-  
-except (ConnectionError, Timeout, TooManyRedirects) as e:
-  print(e)
-  
-
-most_value_cryptos = []
-for crypto in data["data"]:
-    most_value_cryptos.append((crypto["name"], crypto["quote"]["EUR"]["price"], crypto["quote"]["EUR"]["market_cap"]))
+    def get_top_10_cryptos(self):
+        self.get_all_cryptos()
+        self.top_10_cryptos = [crypto for crypto in self.most_value_cryptos[:10]]
+    
