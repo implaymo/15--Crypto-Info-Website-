@@ -12,7 +12,7 @@ class ApiProvider():
 
         self.parameters = {
             'start': '1',
-            'limit': '5000',
+            'limit': '10',
             'convert': 'EUR'
         }
         
@@ -22,8 +22,6 @@ class ApiProvider():
         }
         
         self.most_value_cryptos = []
-        self.top_10_cryptos = []
-
         
     def get_all_cryptos(self):  
         session = Session()
@@ -35,8 +33,3 @@ class ApiProvider():
             print(e)
         for crypto in data["data"]:
             self.most_value_cryptos.append((crypto["name"], crypto["quote"]["EUR"]["price"], crypto["quote"]["EUR"]["market_cap"]))
-
-    def get_top_10_cryptos(self):
-        self.get_all_cryptos()
-        self.top_10_cryptos = [crypto for crypto in self.most_value_cryptos[:10]]
-    
