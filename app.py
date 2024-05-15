@@ -7,7 +7,6 @@ def home():
     api = ApiProvider()
     api.get_all_cryptos()
     top_10_cryptocurrencies = api.most_value_cryptos
-    api.get_cryptos_description()
     return render_template("index.html", top_10_cryptocurrencies=top_10_cryptocurrencies)
 
 @app.route('/cryptoinfo')
