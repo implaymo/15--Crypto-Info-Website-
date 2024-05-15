@@ -14,6 +14,7 @@ class ApiProvider():
         }
         self.most_value_cryptos = []
         self.top_10_cryptos_names = []
+
     
         
     def get_all_cryptos(self):  
