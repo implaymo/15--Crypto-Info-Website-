@@ -33,9 +33,6 @@
 						<div class="inner">
 							<h1>TOP 10 CRYPTOCURRENCIES</h1>
 							<p>Scroll down to see the top 10 cryptocurrencies at the moment!</p>
-							<ul class="actions">
-								<li><a href="#one" class="button scrolly">Learn more</a></li>
-							</ul>
 						</div>
 					</section>
 
@@ -48,6 +45,9 @@
 								<div class="inner">
 									<h2>{{ crypto[0] }}</h2>
 									<p>Price: {{ crypto[1] }} € <br> Market Cap: {{ crypto[2]}} €</p>
+									<ul class="actions">
+										<li><a href="{{ url_for('crypto_info') }}" class="button scrolly">Learn more</a></li>
+									</ul>
 								</div>
 							</div>
 					</section>
