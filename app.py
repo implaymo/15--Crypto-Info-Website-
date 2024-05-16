@@ -27,40 +27,45 @@ class CryptoInfo(db.Model):
 
 api = ApiProvider()
 
+with app.app_context():
+    db.create_all()
+
+
 def get_db_data():
     return CryptoInfo.query.all()
 
-def add_data_db(api_crypto_list):  
+def update_data_db(api_crypto_list): 
+    data_db = get_db_data() 
     for crypto in api_crypto_list:
-        new_info = CryptoInfo(
-            name = crypto[0],
-            price = crypto[1],
-            market_cap = crypto[2],
-            max_supply = crypto[3],
-            circulating_sup = crypto[4],
-            cmc_rank = crypto[5]
-        )
-        try:
-            db.session.add(new_info)
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            print(f"Error ocurred: {e}")
+        for data in data_db:
+            if crypto[0] == data.name:
+                data.name = crypto[0]
+                data.price = crypto[1]
+                data.market_cap = crypto[2]
+                data.max_supply = crypto[3]
+                data.circulating_sup = crypto[4]
+                data.cmc_rank = crypto[5]
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error ocurred: {e}")
         
-
+def update_db():
+    pass
 
 
 @app.route('/')
 def home():
-    api.get_crypto_api()
+    api.api_data()
     api.store_cryptos() 
-    add_data_db(api.all_cryptos)   
+    update_data_db(api.all_cryptos)   
     all_cryptos = CryptoInfo.query.all()
 
     return render_template("index.html", all_cryptos=all_cryptos)
 
-@app.route('/cryptoinfo/<int:id>')
-def crypto_info(id):
+@app.route('/cryptoinfo')
+def crypto_info():
     return render_template("cryptoinfo.html")
 
 

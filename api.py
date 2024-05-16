@@ -15,7 +15,7 @@ class ApiProvider():
 
     
         
-    def get_crypto_api(self):  
+    def api_data(self):  
         url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
         parameters = {
             'start': '1',
