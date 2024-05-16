@@ -34,11 +34,11 @@ class ApiProvider():
     def store_cryptos(self):
         self.all_cryptos = []
         for crypto in self.data["data"]:
-            top_10_cryptos_names = crypto["name"]
-            crypto_current_price = '{:,.2f}'.format(crypto["quote"]["EUR"]["price"])
+            crypto_name = crypto["name"]
+            crypto_price = '{:,.2f}'.format(crypto["quote"]["EUR"]["price"])
             crypto_market_cap ='{:,}'.format(int(crypto["quote"]["EUR"]["market_cap"]))
             crypto_max_supply = crypto["max_supply"]
-            crypto_circulating_supply = '{:,}'.format(crypto["circulating_supply"])
+            crypto_circulating_sup = '{:,}'.format(crypto["circulating_supply"])
             cmc_rank = crypto["cmc_rank"]
-            self.all_cryptos.append((top_10_cryptos_names, crypto_current_price, crypto_market_cap, crypto_max_supply, crypto_circulating_supply, cmc_rank))
+            self.all_cryptos.append((crypto_name, crypto_price, crypto_market_cap, crypto_max_supply, crypto_circulating_sup, cmc_rank))
             
