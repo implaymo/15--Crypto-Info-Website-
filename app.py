@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from get_api import ApiProvider
+from api import ApiProvider
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 
@@ -14,8 +14,8 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 db.init_app(app=app)
 
 
-
 class CryptoInfo(db.Model):
+    """Table and Row to store all cryptos"""
     __tablename__ = "crypto_info"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String, nullable=False)
@@ -27,14 +27,15 @@ class CryptoInfo(db.Model):
 
 api = ApiProvider()
 
-@app.route('/')
-def home():
-    api.get_all_cryptos()
-    top_10_cryptocurrencies = api.most_value_cryptos
+def get_db_data():
+    db_data = CryptoInfo.query.all()
+    return db_data
 
+def update_db():
+    all_cryptos = api.all_cryptos
     crypto_entries = []
-    for crypto in top_10_cryptocurrencies:
-        CryptoInfo(
+    for crypto in all_cryptos:
+        new_data = CryptoInfo(
             name = crypto[0],
             price = crypto[1],
             market_cap = crypto[2],
@@ -42,15 +43,22 @@ def home():
             circulating_sup = crypto[4],
             cmc_rank = crypto[5]
         )
-        crypto_entries.append(CryptoInfo)
+        crypto_entries.append(new_data)
     try:
-            db.session.bulk_save_objects(crypto_entries)
-            db.session.commit()
+        db.session.bulk_save_objects(crypto_entries)
+        db.session.commit()
     except Exception as e:
         db.session.rollback()
         print(f"Error ocurred: {e}")
         
-    return render_template("index.html", top_10_cryptocurrencies=top_10_cryptocurrencies)
+
+@app.route('/')
+def home():
+    api.get_crypto_api()
+    api.store_cryptos()
+    all_cryptos = CryptoInfo.query.all()
+
+    return render_template("index.html", all_cryptos=all_cryptos)
 
 @app.route('/cryptoinfo')
 def crypto_info():
