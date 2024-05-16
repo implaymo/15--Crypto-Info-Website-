@@ -57,7 +57,6 @@ def home():
     api.store_cryptos() 
     update_db(api.all_cryptos)   
     all_cryptos = CryptoInfo.query.all()
-
     return render_template("index.html", all_cryptos=all_cryptos)
 
 @app.route('/cryptoinfo/<int:id>', methods=["GET", "POST"])
