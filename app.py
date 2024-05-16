@@ -24,18 +24,19 @@ class CryptoInfo(db.Model):
     max_supply = db.Column(db.String, nullable=True)
     circulating_sup = db.Column(db.String, nullable=True)
     cmc_rank = db.Column(db.Integer, nullable=True)
+    percent_change_24h = db.Column(db.String, nullable=True)
+    percent_change_7d = db.Column(db.String, nullable=True)
+    volume_24h = db.Column(db.String, nullable=True)
 
 api = ApiProvider()
 
 with app.app_context():
     db.create_all()
-
-
+    
 def get_db_data():
     return CryptoInfo.query.all()
 
-def update_db(api_crypto_list): 
-    data_db = get_db_data() 
+def update_db(api_crypto_list, data_db): 
     for crypto in api_crypto_list:
         for data in data_db:
             if crypto[0] == data.name:
@@ -45,7 +46,33 @@ def update_db(api_crypto_list):
                 data.max_supply = crypto[3]
                 data.circulating_sup = crypto[4]
                 data.cmc_rank = crypto[5]
+                data.percent_change_24h = crypto[6]
+                data.percent_change_7d = crypto[7]
+                data.volume_24h = crypto[8]
     try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error ocurred: {e}")
+
+        
+def add_crypto_db(api_crypto_list):
+    crypto_entries = []   
+    for crypto in api_crypto_list:
+        new_data = CryptoInfo(
+                name = crypto[0],
+                price = crypto[1],
+                market_cap = crypto[2],
+                max_supply = crypto[3],
+                circulating_sup = crypto[4],
+                cmc_rank = crypto[5],
+                percent_change_24h = crypto[6],
+                percent_change_7d = crypto[7],
+                volume_24h = crypto[8]
+        )
+        crypto_entries.append(new_data)
+    try:
+        db.session.bulk_save_objects(crypto_entries)
         db.session.commit()
     except Exception as e:
         db.session.rollback()
@@ -55,7 +82,11 @@ def update_db(api_crypto_list):
 def home():
     api.api_data()
     api.store_cryptos() 
-    update_db(api.all_cryptos)   
+    data_db = get_db_data() 
+    if not data_db:
+        add_crypto_db(api.all_cryptos)
+    else:
+        update_db(api.all_cryptos, data_db)    
     all_cryptos = CryptoInfo.query.all()
     return render_template("index.html", all_cryptos=all_cryptos)
 

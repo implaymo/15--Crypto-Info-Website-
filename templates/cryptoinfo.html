@@ -30,8 +30,9 @@
 					<section id="main" class="wrapper">
 						<div class="inner">
 							<h1 class="major">{{ request_crypto.name}}</h1>
-							<span class="image fit"><img src="/static/images/pic04.jpg" alt="" /></span>
-							<p>Circulating Supply: {{ request_crypto.circulating_sup }} € <br>CMC RANK: {{ request_crypto.cmc_rank}} </p>
+							<p>CoinMarketCap Rank: {{ request_crypto.cmc_rank}} <br> Circulating Supply: {{ request_crypto.circulating_sup }} 
+								<br> Percentage change last 24h: {{ request_crypto.percent_change_24h}} % <br> Percentage change last 7 days: {{ request_crypto.percent_change_7d}} %
+								<br>Volume last 24h: {{ request_crypto.volume_24h}} €</p>
 						</div>
 					</section>
 

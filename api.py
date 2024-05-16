@@ -40,5 +40,8 @@ class ApiProvider():
             crypto_max_supply = crypto["max_supply"]
             crypto_circulating_sup = '{:,}'.format(crypto["circulating_supply"])
             cmc_rank = crypto["cmc_rank"]
-            self.all_cryptos.append((crypto_name, crypto_price, crypto_market_cap, crypto_max_supply, crypto_circulating_sup, cmc_rank))
+            percent_change_24h = '{:,.2f}'.format(crypto["quote"]["EUR"]["percent_change_24h"])
+            percent_change_7d = '{:,.2f}'.format(crypto["quote"]["EUR"]["percent_change_24h"])
+            volume_24h = '{:,}'.format(int(crypto["quote"]["EUR"]["volume_24h"]))
+            self.all_cryptos.append((crypto_name, crypto_price, crypto_market_cap, crypto_max_supply, crypto_circulating_sup, cmc_rank, percent_change_24h, percent_change_7d, volume_24h))
             
