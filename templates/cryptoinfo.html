@@ -16,7 +16,7 @@
 
 		<!-- Header -->
 			<header id="header">
-				<a href="index.html" class="title">Hyperspace</a>
+				<a href="" class="title">Hyperspace</a>
 				<nav>
 					<ul>
 						<li><a href="{{ url_for('home')}}">Home</a></li>
@@ -30,9 +30,9 @@
 				<!-- Main -->
 					<section id="main" class="wrapper">
 						<div class="inner">
-							<h1 class="major">{{ crypto[0]}}</h1>
+							<h1 class="major">{{ request_crypto.name}}</h1>
 							<span class="image fit"><img src="images/pic04.jpg" alt="" /></span>
-							<p>Price: {{ crypto[1] }} € <br> Market Cap: {{ crypto[2]}} €</p>
+							<p>Circulating Supply: {{ request_crypto.circulating_sup }} € <br>CMC RANK: {{ request_crypto.cmc_rank}} </p>
 						</div>
 					</section>
 

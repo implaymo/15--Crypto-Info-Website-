@@ -34,7 +34,7 @@ with app.app_context():
 def get_db_data():
     return CryptoInfo.query.all()
 
-def update_data_db(api_crypto_list): 
+def update_db(api_crypto_list): 
     data_db = get_db_data() 
     for crypto in api_crypto_list:
         for data in data_db:
@@ -50,23 +50,20 @@ def update_data_db(api_crypto_list):
     except Exception as e:
         db.session.rollback()
         print(f"Error ocurred: {e}")
-        
-def update_db():
-    pass
-
 
 @app.route('/')
 def home():
     api.api_data()
     api.store_cryptos() 
-    update_data_db(api.all_cryptos)   
+    update_db(api.all_cryptos)   
     all_cryptos = CryptoInfo.query.all()
 
     return render_template("index.html", all_cryptos=all_cryptos)
 
-@app.route('/cryptoinfo')
-def crypto_info():
-    return render_template("cryptoinfo.html")
+@app.route('/cryptoinfo/<int:id>', methods=["GET", "POST"])
+def crypto_info(id):
+    request_crypto = db.get_or_404(CryptoInfo, id) 
+    return render_template("cryptoinfo.html", request_crypto=request_crypto)
 
 
 if __name__ == '__main__':

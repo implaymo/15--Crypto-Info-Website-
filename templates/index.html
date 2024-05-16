@@ -45,7 +45,7 @@
 									<h2>{{ crypto.cmc_rank }}. {{ crypto.name }}</h2>
 									<p>Price: {{ crypto.price }} € <br> Market Cap: {{ crypto.market_cap}} €</p>
 									<ul class="actions">
-										<li><a href="{{ url_for('crypto_info') }}" class="button scrolly">Learn more</a></li>
+										<li><a href="{{ url_for('crypto_info', id=crypto.id) }}" class="button scrolly">Learn more</a></li>
 									</ul>
 								</div>
 							</div>
